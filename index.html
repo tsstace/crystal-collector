@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Crystals Collector Game</title>
+
+  <!-- Linking Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <!-- Linking Google Fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat|Roboto+Slab|Yellowtail' rel='stylesheet' type='text/css'>
+  <!-- Linking CSS -->
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-offset-2 col-md-8">
+        <div class="jumbotron">
+          <h2>The Crystal Collector Game</h2>
+          <h2>Collect the number of crystals to match the random number</h2>
+          <h2>Wins:
+            <span id="user-wins">
+              <strong>0</strong>
+            </span>
+          </h2>
+          <h2>Losses:
+            <span id="user-losses">
+              <strong>0</strong>
+            </span>
+          </h2>
+          <h2>Guesses left:
+            <span id="user-guessesleft">
+              <strong>9</strong>
+            </span>
+          </h2>
+          <h2>Your guesses so far:
+            <span id="user-text">
+              <strong>...?...</strong>
+            </span>
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+
+    // Let's start by grabbing a reference to the <span>.
+    var userText = document.getElementById("user-text");
+    var userWins = document.getElementById("user-wins");
+    var userLosses = document.getElementById("user-losses");
+    var userGuessesLeft = document.getElementById("user-guessesleft");
+    var guessed = document.getElementById("user-text");
+
+
+    // Next, we give JavaScript a function to execute when onkeyup event fires.
+    var options = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    var winCount = 0;
+    var lossCount = 0;
+    var guessCount = 9;
+    var userGuesses = [];
+    var letterGuessed = false;
+    var userSelection;
+    var lowerCaseGuess;
+
+    document.onkeyup = function (event) {
+
+      var cpuChoice = Math.floor(Math.random() * 25);     // returns a number between 0 and 25
+      console.log(event.key);
+
+      var cpuSelection = options[cpuChoice];
+      userSelection = event.key;
+
+      checkCase();
+
+      checkLetter();
+
+      if (!letterGuessed && cpuSelection == userSelection) {
+        winCount++;
+        reset();
+      }
+      else if (!letterGuessed) {
+        guessCount--;
+        checkGuessCount();
+        checkLetter();
+        userGuesses.push(userSelection);
+
+      }
+
+      userText.innerHTML = event.key;
+      userWins.innerHTML = '' + winCount + '<br />';
+      userLosses.innerHTML = '' + lossCount + '<br />';
+      userGuessesLeft.innerHTML = '' + guessCount + '<br />';
+      guessed.innerHTML = userGuesses.join(", ") + '<br />';
+    };
+
+    function checkGuessCount() {
+      // user is done, game over      
+      if (guessCount < 0) {
+        lossCount++;
+        reset();
+      }
+      else {
+        return;
+      }
+    }
+
+    function checkCase() {
+      var lowerCaseGuess = userSelection.toLowerCase();
+    }
+
+    function checkLetter() {
+      for (var i = 0; i < userGuesses.length; i++) {
+        if (userSelection === userGuesses[i]) {
+          letterGuessed = true;
+          console.log("you already guessed that letter");
+        }
+        else {
+          letterGuessed = false;
+          return;
+        }
+      }
+    }
+
+    function reset() {
+      guessCount = 9;
+      userGuesses = [];
+    };
+  </script>
+</body>
+<!--  26 options for user choice: letters of the alphabet  ['a', 'b', 'c' 'etc']
+         2 actors:  cpu and user
+         10 chances in one round
+         keyup triggers game playing
+
+        1. check for match between user choice and cpu choice
+        2. if user choice matches cpu choice
+              increment win count and start over, reset guesses remaining
+            else
+              decrease guesses remaining by one
+              store guess in array and return to screen.   
+        3. repeat until guess count reaches 10
+              if no match, then increment loss count by one and reset guess count to 10.
+  -->
+
+</html>
