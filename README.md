@@ -1,12 +1,12 @@
 # Crystal Collector Game:
 
-This project allows the user to play a game with the browser; there are 4 crystal options, each with a different point value and the user must try to match a randomly generated number using a combination of crystal selections.
+This project allows the user to play a game with the browser; there are 4 crystal images, each with a different "hidden" point value and the user must try to match a randomly generated number using a combination of crystal selections.
 
-The browser is waiting for onClick events, generated when the user clicks on one of the four crystal images;
+The browser generates the crystal values and the random number on page load, and then waits for onClick events; generated when the user clicks on one of the four crystal images;
 
 Ground rules:
 
-* 4 options for user choice: buttons with point values from 1 to 12, randomly assigned, no dups 
+* 4 options for user choice: buttons with point values from 1 to 12, randomly assigned, no duplicates 
 * Random number generator returns goal amount; possible values range from 19 to 120
 * 2 actors:  computer and user
 * OnClick event on buttons triggers game play/tally increment
