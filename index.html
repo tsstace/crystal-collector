@@ -5,17 +5,17 @@
   <meta charset="UTF-8">
   <title>Crystals Collector Game</title>
 
-  <!-- Linking Bootstrap -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+  <!-- Linking JQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
   <!-- Linking Google Fonts -->
   <link href='https://fonts.googleapis.com/css?family=Montserrat|Roboto+Slab|Yellowtail' rel='stylesheet' type='text/css'>
+
   <!-- Linking CSS -->
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
 </head>
 
@@ -36,119 +36,124 @@
               <strong>0</strong>
             </span>
           </h2>
-          <h2>Guesses left:
-            <span id="user-guessesleft">
-              <strong>9</strong>
-            </span>
-          </h2>
-          <h2>Your guesses so far:
-            <span id="user-text">
-              <strong>...?...</strong>
-            </span>
-          </h2>
+          <!-- Here is where our random number will go -->
+          <h1>Number to guess:
+            <span id="number-to-guess"></span>
+          </h1>
+          <h1>Your total score:
+            <span id="counter"></span>
+          </h1>
         </div>
       </div>
     </div>
   </div>
 
-  <script type="text/javascript">
+  <div id="crystal-images">
+    <img id="crystal1" src="assets/images/citrine-3201605__480.jpg">
+    <img id="crystal2" src="assets/images/precious-stone-3259727__480.jpg">
+    <img id="crystal3" src="assets/images/colored-glass-3092416__480.jpg">
+    <img id="crystal4" src="assets/images/rock-crystal-1603480__480.jpg">
+  </div>
 
-    // Let's start by grabbing a reference to the <span>.
-    var userText = document.getElementById("user-text");
-    var userWins = document.getElementById("user-wins");
-    var userLosses = document.getElementById("user-losses");
-    var userGuessesLeft = document.getElementById("user-guessesleft");
-    var guessed = document.getElementById("user-text");
+  <script>
 
+   var crystals = $("#crystals");
 
-    // Next, we give JavaScript a function to execute when onkeyup event fires.
-    var options = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-    var winCount = 0;
+    var crystalArray = [
+      "crystal1",
+      "crystal2",
+      "crystal3",
+      "crystal4"
+    ]
+
+    var crystalValues = [];
+    var randomNumber;
+    var targetNumber;
+    var counter = 0;
     var lossCount = 0;
-    var guessCount = 9;
-    var userGuesses = [];
-    var letterGuessed = false;
-    var userSelection;
-    var lowerCaseGuess;
+    var winCount = 0;
 
-    document.onkeyup = function (event) {
-
-      var cpuChoice = Math.floor(Math.random() * 25);     // returns a number between 0 and 25
-      console.log(event.key);
-
-      var cpuSelection = options[cpuChoice];
-      userSelection = event.key;
-
-      checkCase();
-
-      checkLetter();
-
-      if (!letterGuessed && cpuSelection == userSelection) {
-        winCount++;
-        reset();
-      }
-      else if (!letterGuessed) {
-        guessCount--;
-        checkGuessCount();
-        checkLetter();
-        userGuesses.push(userSelection);
-
-      }
-
-      userText.innerHTML = event.key;
-      userWins.innerHTML = '' + winCount + '<br />';
-      userLosses.innerHTML = '' + lossCount + '<br />';
-      userGuessesLeft.innerHTML = '' + guessCount + '<br />';
-      guessed.innerHTML = userGuesses.join(", ") + '<br />';
-    };
-
-    function checkGuessCount() {
-      // user is done, game over      
-      if (guessCount < 0) {
-        lossCount++;
-        reset();
+    function pushRandomNumber() {
+      randomNumber = Math.floor(Math.random() * 12)
+      if (crystalValues.indexOf(randomNumber) === -1) {
+        crystalValues.push(randomNumber);
       }
       else {
-        return;
+        pushRandomNumber();
       }
     }
 
-    function checkCase() {
-      var lowerCaseGuess = userSelection.toLowerCase();
-    }
-
-    function checkLetter() {
-      for (var i = 0; i < userGuesses.length; i++) {
-        if (userSelection === userGuesses[i]) {
-          letterGuessed = true;
-          console.log("you already guessed that letter");
-        }
-        else {
-          letterGuessed = false;
-          return;
-        }
+    function createCrystals() {
+      for (var i = 0; i < 4; i++) {
+        pushRandomNumber();
+        var imageCrystal = $("<img>");
+        $("#container").append(`
+        <img src=${crystalArray[i]} value=${randomNumber} />
+      `)
+        // Each Crystal will be given a data attribute called data-crystalValue.
+        // This data attribute will be set equal to the array value.
+        //    crystals.attr("data-crystalvalue", crystalValues[i]);
+        crystals.attr("data-crystalvalue", crystalValues[i]);
       }
     }
 
-    function reset() {
-      guessCount = 9;
-      userGuesses = [];
-    };
+    function getRandomInt(min, max) {
+      targetNumber = Math.floor(Math.random() * 102) + 19;
+      $("#number-to-guess").text(targetNumber);
+    }
+
+
+    function startGame() {
+      createCrystals();
+      getRandomInt();
+    }
+
+    startGame();
+
+    $(document).on("click", "#crystal-images", function () {
+      console.log(crystalValues);
+
+//      var crystalValue = ($(this).attr("data-crystalvalue"));
+//      crystalValue = parseInt(crystalArray[i]);
+//      console.log(crystalValue);
+
+      counter += crystalValues;
+      $("#counter").text(counter);
+
+      if (counter === targetNumber) {
+        alert("You win!");
+        winCount++;
+        $("#user-wins").text(winCount);
+      }
+
+      else if (counter >= targetNumber) {
+        alert("You lose!!");
+        lossCount++;
+        $("#user-losses").text(lossCount);
+        startGame();
+      }
+
+    })
+
   </script>
 </body>
-<!--  26 options for user choice: letters of the alphabet  ['a', 'b', 'c' 'etc']
-         2 actors:  cpu and user
-         10 chances in one round
-         keyup triggers game playing
+<!--     * 4 options f)or user choice: buttons with point values from 1 to 12, randomly assigned, no dups 
+         * Random number generator returns goal amount; possible values range from 19 to 120
+         * 2 actors:  computer and user
+         * OnClick event on buttons triggers game play/tally increment
+         * gameplay continues until user matches or exceeds randomly generated number
 
-        1. check for match between user choice and cpu choice
-        2. if user choice matches cpu choice
-              increment win count and start over, reset guesses remaining
-            else
-              decrease guesses remaining by one
-              store guess in array and return to screen.   
-        3. repeat until guess count reaches 10
-              if no match, then increment loss count by one and reset guess count to 10.
+        1. load page with randomly generated number and assign point values to each button
+        2. wait for onClick event
+        3. evaluate button selection, add point value to running tally
+                  if running tally matches randomly generated number
+                      increment win count and start over, generate new random number and reset button values
+                  else
+                      if running tally > randomly generated number
+                          increment loss count and start over, generate new random number and reset button values
+                      else    
+                          if running tally < randomly generated number
+                              wait for another button click
   -->
 
 </html>

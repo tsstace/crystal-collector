@@ -1,3 +1,10 @@
+//$("#crystalButton").on("click", function() {
+//	var number = Math.floor((Math.random() * crystalButtonArray.length));
+//	$("#crystalValue").text(crystalButtonArray[number])
+//})
+
+//var crystalButtonArray = ["1", "2", "3", "4", "5", "6", "7","8", "9", "10", "11", "12"]
+
 var targetNumber = 53;
 
 $("#number-to-guess").text(targetNumber);
@@ -22,7 +29,7 @@ for (var i = 0; i < numberOptions.length; i++) {
   imageCrystal.addClass("crystal-image");
 
   // Each imageCrystal will be given a src link to the crystal image
-  imageCrystal.attr("src", "http://cdn.playbuzz.com/cdn/35910209-2844-45c0-b099-f4d82878d54f/00261fda-4062-4096-81fd-8cf96b9034e8.jpg");
+  imageCrystal.attr("src", "../assets/images/citrine-3201605_480.jpg");
 
   // Each imageCrystal will be given a data attribute called data-crystalValue.
   // This data attribute will be set equal to the array value.
