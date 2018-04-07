@@ -1,67 +1,76 @@
-//$("#crystalButton").on("click", function() {
-//	var number = Math.floor((Math.random() * crystalButtonArray.length));
-//	$("#crystalValue").text(crystalButtonArray[number])
-//})
+  var crystals = $("#crystals");
 
-//var crystalButtonArray = ["1", "2", "3", "4", "5", "6", "7","8", "9", "10", "11", "12"]
+    var crystalArray = [
+      "crystal1",
+      "crystal2",
+      "crystal3",
+      "crystal4"
+    ]
 
-var targetNumber = 53;
+    var crystalValues = [];
+    var randomNumber;
+    var targetNumber;
+    var counter = 0;
+    var lossCount = 0;
+    var winCount = 0;
 
-$("#number-to-guess").text(targetNumber);
+    function pushRandomNumber() {
+      randomNumber = Math.floor(Math.random() * 12)
+      if (crystalValues.indexOf(randomNumber) === -1) {
+        crystalValues.push(randomNumber);
+      }
+      else {
+        pushRandomNumber();
+      }
+    }
 
-var crystals = $("#crystals");
+    function createCrystals() {
+      for (var i = 0; i < 4; i++) {
+        pushRandomNumber();
+        $("#container").append(`
+        <img src=${crystalArray[i]} value=${randomNumber} />
+      `)
 
-var counter = 0;
+        // Need to grab the array value of the crystal selected so it can be referenced
+        //    crystals.attr("data-crystalvalue", crystalValues[i]);
+        crystals.attr("data-crystalvalue", crystalValues[i]);
+      }
+    }
 
-// Now for the hard part. Creating multiple crystals each with their own unique number value.
+    function getRandomInt(min, max) {
+      targetNumber = Math.floor(Math.random() * 102) + 19;
+      $("#number-to-guess").text(targetNumber);
+    }
 
-// We begin by expanding our array to include four options.
-var numberOptions = [10, 5, 3, 7];
+    function startGame() {
+      createCrystals();
+      getRandomInt();
+    }
 
-// Next we create a for loop to create crystals for every numberOption.
-for (var i = 0; i < numberOptions.length; i++) {
+    startGame();
 
-  // For each iteration, we will create an imageCrystal
-  var imageCrystal = $("<img>");
+    $(document).on("click", "#crystal-images", function () {
+      console.log(crystalValues);
 
-  // First each crystal will be given the class ".crystal-image".
-  // This will allow the CSS to take effect.
-  imageCrystal.addClass("crystal-image");
+//      Take the point value for the crystal selected and parse it so we can do math on it
+//      var crystalValue = ($(this).attr("data-crystalvalue"));
+//      crystalValue = parseInt(crystalArray[i]);
+//      console.log(crystalValue);
 
-  // Each imageCrystal will be given a src link to the crystal image
-  imageCrystal.attr("src", "../assets/images/citrine-3201605_480.jpg");
+      counter += crystalValues;
+      $("#counter").text(counter);
 
-  // Each imageCrystal will be given a data attribute called data-crystalValue.
-  // This data attribute will be set equal to the array value.
-  imageCrystal.attr("data-crystalvalue", numberOptions[i]);
+      if (counter === targetNumber) {
+        alert("You win!");
+        winCount++;
+        $("#user-wins").text(winCount);
+      }
 
-  // Lastly, each crystal image (with all it classes and attributes) will get added to the page.
-  crystals.append(imageCrystal);
-}
+      else if (counter >= targetNumber) {
+        alert("You lose!!");
+        lossCount++;
+        $("#user-losses").text(lossCount);
+        startGame();
+      }
 
-// This time, our click event applies to every single crystal on the page. Not just one.
-crystals.on("click", ".crystal-image", function() {
-
-  // Determining the crystal's value requires us to extract the value from the data attribute.
-  // Using the $(this) keyword specifies that we should be extracting the crystal value of the clicked crystal.
-  // Using the .attr("data-crystalvalue") allows us to grab the value out of the "data-crystalvalue" attribute.
-  // Since attributes on HTML elements are strings, we must convert it to an integer before adding to the counter
-
-  var crystalValue = ($(this).attr("data-crystalvalue"));
-  crystalValue = parseInt(crystalValue);
-  // We then add the crystalValue to the user's "counter" which is a global variable.
-  // Every click, from every crystal adds to the global counter.
-  counter += crystalValue;
-
-  // All of the same game win-lose logic applies. So the rest remains unchanged.
-  alert("New score: " + counter);
-
-  if (counter === targetNumber) {
-    alert("You win!");
-  }
-
-  else if (counter >= targetNumber) {
-    alert("You lose!!");
-  }
-
-});
+    });
