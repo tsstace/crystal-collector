@@ -63,9 +63,6 @@
     //      crystalValue = parseInt(crystalArray[i]);
     //      console.log(crystalValue);
 
-    // counter += crystalValues;
-    // $("#counter").text(counter);
-
     if (counter === targetNumber) {
       alert("You win!");
       winCount++;
